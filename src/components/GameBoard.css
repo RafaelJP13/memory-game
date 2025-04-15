@@ -16,3 +16,21 @@
     font-size: 16px;
     cursor: pointer;
   }
+
+  .upload-section {
+    margin-bottom: 20px;
+  }
+  
+  .upload-section label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  .upload-section input {
+    padding: 5px;
+  }
+  
+  .upload-section p {
+    font-size: 14px;
+    color: #555;
+  }

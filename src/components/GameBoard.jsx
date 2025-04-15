@@ -3,24 +3,34 @@ import Card from "./Card";
 import "./GameBoard.css";
 
 function GameBoard() {
-  const initialCards = [
-    { id: 1, value: "src/assets/images/card1.png", matched: false },
-    { id: 2, value: "src/assets/images/card1.png", matched: false },
-    { id: 3, value: "src/assets/images/card2.png", matched: false },
-    { id: 4, value: "src/assets/images/card2.png", matched: false },
-    { id: 5, value: "src/assets/images/card3.png", matched: false },
-    { id: 6, value: "src/assets/images/card3.png", matched: false },
-    { id: 7, value: "src/assets/images/card4.png", matched: false },
-    { id: 8, value: "src/assets/images/card4.png", matched: false },
-  ];
-
-  const [cards, setCards] = useState(shuffleCards([...initialCards]));
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [cards, setCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [moves, setMoves] = useState(0);
 
   function shuffleCards(array) {
     return array.sort(() => Math.random() - 0.5);
   }
+
+  const handleImageUpload = (event) => {
+    const files = Array.from(event.target.files);
+    const validImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+    const newImages = files
+      .filter((file) => validImageTypes.includes(file.type))
+      .map((file) => URL.createObjectURL(file));
+
+    const updatedImages = [...uploadedImages, ...newImages].slice(0, 4);
+    setUploadedImages(updatedImages);
+
+    if (updatedImages.length >= 4) {
+      const newCards = updatedImages.flatMap((image, index) => [
+        { id: index * 2 + 1, value: image, matched: false },
+        { id: index * 2 + 2, value: image, matched: false },
+      ]);
+      setCards(shuffleCards(newCards));
+    }
+  };
 
   const handleFlip = (id) => {
     if (
@@ -54,14 +64,35 @@ function GameBoard() {
   }, [flippedCards, cards]);
 
   const resetGame = () => {
-    setCards(shuffleCards([...initialCards]));
     setFlippedCards([]);
     setMoves(0);
+
+    if (uploadedImages.length >= 4) {
+      const newCards = uploadedImages.flatMap((image, index) => [
+        { id: index * 2 + 1, value: image, matched: false },
+        { id: index * 2 + 2, value: image, matched: false },
+      ]);
+      setCards(shuffleCards(newCards));
+    }
   };
 
   return (
     <div className="game-board">
       <h2>Movimentos: {moves}</h2>
+      <div className="upload-section">
+        <label htmlFor="image-upload">Carregar Imagens (PNG/JPG):</label>
+        <input
+          id="image-upload"
+          type="file"
+          accept="image/png, image/jpeg, image/jpg"
+          multiple
+          onChange={handleImageUpload}
+        />
+        <p>Carregue até 4 imagens para criar o baralho.</p>
+      </div>
+      {cards.length === 0 && (
+        <p>Por favor, carregue pelo menos 4 imagens para começar o jogo.</p>
+      )}
       <div className="card-grid">
         {cards.map((card) => (
           <Card
@@ -73,7 +104,7 @@ function GameBoard() {
           />
         ))}
       </div>
-      <button onClick={resetGame}>Resetar Jogo</button>
+      {cards.length > 0 && <button onClick={resetGame}>Resetar Jogo</button>}
     </div>
   );
 }
