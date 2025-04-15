@@ -23,7 +23,7 @@ O **Memory Game** é uma aplicação web inspirada no tradicional jogo da memór
 - ✅ **Feedback visual** para acertos e erros  
 - 📱 **Layout responsivo** para desktop e mobile  - Melhorar
 - 🔄 **Botão de reinício** para jogar novamente  - Corrigir
-
+- 📸 **Suporte a imagens dinâmicas: agora você pode escolher 4 fotos para personalizar o baralho**
 ---
 
 ## 🚀 Como Executar Localmente
